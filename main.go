@@ -1,11 +1,13 @@
 package main
 
 import (
+	"headers"
 	"net/http"
 )
 
 func handlerFunc(w http.ResponseWriter, r *http.Request){
-	w.Write([]byte("JOPA"))
+	w.Header().Set(headers.ContentTypeTextHtml())
+	w.Write([]byte("<h1>JOPA</jopa>"))
 }
 
 func main(){
