@@ -43,11 +43,11 @@ type View struct {
 	ContentTemplate *template.Template
 }
 
-func(v *View)Render(w io.Writer, data interface{}) error{
+func(v *View)Render(w io.Writer, data interface{}){
+
 	err := v.ContentTemplate.ExecuteTemplate(w, v.LayoutName, data)
 	if err != nil{
-		log.Errorf("Couldn't execute template correctly, ERROR: %s", err.Error())
+		log.Panicf("Couldn't execute template correctly, ERROR: %s", err.Error())
 	}
-	return err
 }
 
