@@ -1,0 +1,21 @@
+{{define "bootstrap"}}
+    <!DOCTYPE html>
+    <html lang="en">
+
+    {{ template "head" .}}
+
+    <body>
+        {{ template  "navbar" .}}
+
+        <div class="container-fluid">
+            {{ template "content" . }}
+        </div>
+
+        {{ template "footer" . }}
+
+        {{ template "js" .}}
+
+    </body>
+
+    </html>
+{{end}}
