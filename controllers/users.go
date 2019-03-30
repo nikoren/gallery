@@ -3,10 +3,9 @@ package controllers
 import (
 	"fmt"
 	"gallery/views"
-	"github.com/gorilla/schema"
-	"log"
 	"net/http"
 	"shortcuts"
+	log "github.com/sirupsen/logrus"
 )
 
 // Users is a controller that can be served as main entry point for all Users
@@ -45,19 +44,10 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 
 	// POST
 	if r.Method == http.MethodPost {
-
-		// Parse the form
-		if err := r.ParseForm(); err != nil{
-			log.Fatalf("Couldn't parse signup form: %s", err.Error())
-		}
-
-		// Extract form values
-		decoder := schema.NewDecoder()
 		var df decodedForm
-		if err := decoder.Decode(&df, r.PostForm); err != nil {
-			log.Fatalf("Couldn't decode form : %s", err.Error())
+		if err := shortcuts.ParseForm(r, &df); err != nil{
+			log.Panicf("Couldn't parse form: %s", err.Error())
 		}
-
 		// User the extracted form values
 		_,_ = fmt.Fprintln(w, "Submited form:", df)
 	}
