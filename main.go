@@ -5,7 +5,7 @@ import (
 	"gallery/controllers"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"headers"
+	"shortcuts"
 	"net/http"
 )
 
@@ -35,19 +35,19 @@ func init(){
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Home requested")
-	w.Header().Set(headers.ContentTypeTextHtml())
+	w.Header().Set(shortcuts.ContentTypeTextHtml())
 	homeView.Render(w, nil)
 }
 
 func contacHandler(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Contact requested")
-	w.Header().Set(headers.ContentTypeTextHtml())
+	w.Header().Set(shortcuts.ContentTypeTextHtml())
 	contactView.Render(w, nil)
 }
 
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	log.Warn("Unknown path was requested: ", r.URL.Path)
+	log.Debugf("Unknown path was requested: ", r.URL.Path)
 	w.WriteHeader(http.StatusNotFound)
 	notFoundView.Render(w, nil)
 }
@@ -71,6 +71,9 @@ func main() {
 	r.HandleFunc("/home", homeHandler)
 	r.HandleFunc("/contact", contacHandler)
 	r.HandleFunc("/users/create", usersC.Create)
+
+	// middlewares
+	r.Use(shortcuts.InspectRequestsMiddleware)
 
 	// Start the server...
 	log.Info("Starting serving on :3000")
