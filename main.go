@@ -2,7 +2,6 @@ package main
 
 import (
 	"gallery/controllers"
-	"gallery/views"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -12,12 +11,6 @@ import (
 const (
 	Port       = 3000
 	LayoutsDir = "views/layouts"
-)
-
-var (
-	homeView     *views.View
-	contactView  *views.View
-	notFoundView *views.View
 )
 
 func handleIfErr(msg string, err error) {
