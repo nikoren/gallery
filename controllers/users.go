@@ -8,19 +8,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Users is a controller that can be served as main entry point for all Users
+// UsersC is a controller that can be served as main entry point for all Users
 // related business logic such as creating,updating, deleting and any any other
 // types of modifications of the users
-type Users struct {
+type UsersC struct {
 	View *views.View
 }
 
-// This function is used for initial setup of Users controller
+// This function is used for initial setup of UsersC controller
 // you should only use it once when you create the controller,
-// it will fail if Users.View template is not parsed correctly
+// it will fail if UsersC.View template is not parsed correctly
 //
-func NewUsersC() *Users {
-	return &Users{
+func NewUsersC() *UsersC {
+	return &UsersC{
 		View: views.NewView("bootstrap",
 			"views/layouts", ""+
 				"views/users/create.gohtml"),
@@ -34,7 +34,7 @@ type decodedForm struct {
 
 // Create  is used to handle all the business logic (implementation details)
 // related to creation of new users objects
-func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
+func (u *UsersC) Create(w http.ResponseWriter, r *http.Request) {
 
 	// GET
 	if r.Method == http.MethodGet {
@@ -50,5 +50,6 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 		}
 		// User the extracted form values
 		_,_ = fmt.Fprintln(w, "Submited form:", df)
+		log.Infof("New user signed up %s", df.Email)
 	}
 }

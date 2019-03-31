@@ -1,76 +1,49 @@
 package main
 
 import (
-	"gallery/views"
 	"gallery/controllers"
+	"gallery/views"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"shortcuts"
 	"net/http"
+	"shortcuts"
 )
 
 const (
-	Port = 3000
+	Port       = 3000
 	LayoutsDir = "views/layouts"
 )
 
 var (
-	homeView    *views.View
-	contactView *views.View
+	homeView     *views.View
+	contactView  *views.View
 	notFoundView *views.View
 )
 
-func handleIfErr(msg string, err error ){
-	if err != nil{
+func handleIfErr(msg string, err error) {
+	if err != nil {
 		log.Fatalf("MSG: %s, ERROR: %s", msg, err)
 	}
 }
 
-func init(){
+func init() {
 	// setup logging
 	log.SetFormatter(&log.TextFormatter{})
-	log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.InfoLevel)
 	log.SetReportCaller(true)
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Home requested")
-	w.Header().Set(shortcuts.ContentTypeTextHtml())
-	homeView.Render(w, nil)
-}
-
-func contacHandler(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Contact requested")
-	w.Header().Set(shortcuts.ContentTypeTextHtml())
-	contactView.Render(w, nil)
-}
-
-
-func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Unknown path was requested: ", r.URL.Path)
-	w.WriteHeader(http.StatusNotFound)
-	notFoundView.Render(w, nil)
-}
-
 func main() {
-
-	// Register views  - just for rendering things , not for business logic
-	homeView = views.NewView(
-		"bootstrap", LayoutsDir, "views/home.gohtml")
-	contactView = views.NewView(
-		"bootstrap", LayoutsDir,"views/contact.gohtml")
-	notFoundView = views.NewView(
-		"bootstrap", LayoutsDir,"views/404.gohtml")
-
 	// Register controllers - business logic goes here
 	usersC := controllers.NewUsersC()
+	staticC := controllers.NewStaticC()
 
 	// Routing - map views/controllers to http routes
 	r := mux.Router{}
-	r.NotFoundHandler = http.HandlerFunc(notFoundHandler)
-	r.HandleFunc("/home", homeHandler)
-	r.HandleFunc("/contact", contacHandler)
-	r.HandleFunc("/users/create", usersC.Create)
+	r.NotFoundHandler = staticC.NotFoundV
+	r.Handle("/home", staticC.HomeV).Methods("GET")
+	r.Handle("/contact", staticC.ContactV).Methods("Get")
+	r.HandleFunc("/users/create", usersC.Create).Methods("GET","POST")
 
 	// middlewares
 	r.Use(shortcuts.InspectRequestsMiddleware)
