@@ -21,9 +21,7 @@ type UsersC struct {
 //
 func NewUsersC() *UsersC {
 	return &UsersC{
-		View: views.NewView("bootstrap",
-			"views/layouts", ""+
-				"views/users/create.gohtml"),
+		View: views.NewView("bootstrap","views/users/create.gohtml"),
 	}
 }
 

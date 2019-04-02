@@ -10,17 +10,25 @@ import (
 	"shortcuts"
 )
 
-// NewView - creates new view by searching for all layouts in layoutsDir , combining them
+
+var(
+	LayoutsDir string = "views/layouts"
+	TemplateExt string  = "gohtml"
+)
+
+
+// NewView - creates new view by searching for all layouts in LayoutsDir , combining them
 // with the provided  contentTemplates , parses the combined list and setting them as
 // ContentTemplate, layoutName will be the template that will be wrapping the
 // ContentTemplate
-func NewView(layoutName string, layoutsDir string, contentTemplates ...string) *View {
+func NewView(layoutName string, contentTemplates ...string) *View {
 
 	// find all layouts
-	foundLayouts, err := filepath.Glob(
-		fmt.Sprintf("%s/*.gohtml", layoutsDir)) // (matches []string, err error)
+	globPattern := fmt.Sprintf("%s/*.%s", LayoutsDir, TemplateExt)
+	foundLayouts, err := filepath.Glob(globPattern) // (matches []string, err error)
+		log.Debugf("Found %v matching %s", foundLayouts, globPattern)
 	if err != nil {
-		log.Fatalf("Couldn't glob %s, ERROR: %v", layoutsDir, err.Error())
+		log.Fatalf("Couldn't glob %s, ERROR: %v", LayoutsDir, err.Error())
 	}
 
 	// aggregate all templates
@@ -48,7 +56,7 @@ type View struct {
 func (v *View) Render(w io.Writer, data interface{}) error {
 	err := v.ContentTemplate.ExecuteTemplate(w, v.LayoutName, data)
 	if err != nil {
-		log.Errorf("Couldn't execute template correctly, ERROR: %s", err.Error())
+		log.Panicf("Couldn't execute template correctly, ERROR: %s", err.Error())
 		return err
 	}
 	return nil

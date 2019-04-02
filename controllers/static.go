@@ -15,9 +15,9 @@ type StaticC struct {
 // NewStaticC creates new static controller
 func NewStaticC() *StaticC{
 	return &StaticC{
-		HomeV:     views.NewView("bootstrap", "views/layouts", "views/static/home.gohtml"),
-		ContactV:  views.NewView("bootstrap", "views/layouts", "views/static/contact.gohtml"),
-		NotFoundV: views.NewView("bootstrap", "views/layouts", "views/static/notfound.gohtml"),
+		HomeV:     views.NewView("bootstrap", "views/static/home.gohtml"),
+		ContactV:  views.NewView("bootstrap",  "views/static/contact.gohtml"),
+		NotFoundV: views.NewView("bootstrap",  "views/static/notfound.gohtml"),
 	}
 }
 

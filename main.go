@@ -22,7 +22,7 @@ func handleIfErr(msg string, err error) {
 func init() {
 	// setup logging
 	log.SetFormatter(&log.TextFormatter{})
-	log.SetLevel(log.InfoLevel)
+	log.SetLevel(log.DebugLevel)
 	log.SetReportCaller(true)
 }
 
